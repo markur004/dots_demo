@@ -34,10 +34,7 @@ public partial class ClientSystem : SystemBase
             Debug.Log(command.ValueRO.message);
             commandBuffer.DestroyEntity(entity);
         }
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            SpawnUnitRpc(ConnectionManager.ClientWorld);
-        }
+
         commandBuffer.Playback(EntityManager);
         commandBuffer.Dispose();
     }

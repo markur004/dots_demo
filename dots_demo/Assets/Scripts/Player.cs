@@ -23,5 +23,6 @@ public class PlayerBaker : Baker<Player>
             speed = authoring.speed
         });
         AddComponent<PlayerInputData>(entity);
+        AddComponent<MainCamera>(entity);
     }
 }
