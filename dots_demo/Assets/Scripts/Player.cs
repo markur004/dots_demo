@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Entities;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class Player : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class Player : MonoBehaviour
 public struct PlayerData : IComponentData
 {
     public float speed;
+
 }
 
 public class PlayerBaker : Baker<Player>
@@ -20,9 +22,8 @@ public class PlayerBaker : Baker<Player>
         var entity = GetEntity(TransformUsageFlags.Dynamic);
         AddComponent(entity, new PlayerData
         {
-            speed = authoring.speed
+            speed = authoring.speed,
         });
         AddComponent<PlayerInputData>(entity);
-        AddComponent<MainCamera>(entity);
     }
 }
