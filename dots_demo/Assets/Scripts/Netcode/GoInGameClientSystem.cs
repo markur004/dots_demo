@@ -16,6 +16,7 @@ public partial struct GoInGameClientSystem : ISystem
         builder.WithAny<NetworkId>();
         builder.WithNone<NetworkStreamInGame>();
         state.RequireForUpdate(state.GetEntityQuery(builder));
+        state.RequireForUpdate<PrefabsData>();
     }
 
     public void OnUpdate(ref SystemState state)

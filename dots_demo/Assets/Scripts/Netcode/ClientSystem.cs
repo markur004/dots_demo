@@ -5,6 +5,7 @@ using Unity.Entities;
 using Unity.NetCode;
 using UnityEngine;
 
+
 public struct ClientMessageRpcCommand : IRpcCommand
 {
     public FixedString64Bytes message;
@@ -19,8 +20,9 @@ public struct SpawnUnitRpcCommand : IRpcCommand
 public partial class ClientSystem : SystemBase
 {
 
-    protected override void OnCreate()
+    protected override  void OnCreate()
     {
+        RequireForUpdate<PrefabsData>();
         RequireForUpdate<NetworkId>();
     }
 

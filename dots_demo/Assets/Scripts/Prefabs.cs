@@ -1,10 +1,13 @@
 using Unity.Entities;
+using Unity.NetCode;
 using UnityEngine;
 
-public class Prefabs : MonoBehaviour
+
+public  class Prefabs : MonoBehaviour
 {
     public GameObject unit = null;
     public GameObject player = null;
+    
 }
 
 public struct PrefabsData : IComponentData
@@ -13,8 +16,11 @@ public struct PrefabsData : IComponentData
     public Entity player;
 }
 
+
+
 public class PrefabsBaker : Baker<Prefabs>
 {
+    
     public override void Bake(Prefabs authoring)
     {
         Entity unitPrefab = default;

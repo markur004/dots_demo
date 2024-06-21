@@ -10,8 +10,10 @@
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/../../../02/DOTS_Netcode_02/Scripts/Netcode/AutoConnectBootstrap.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Netcode/GoInGameClientSystem.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.entities/Unity.Entities.Hybrid/Baking/Baker.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.entities/Unity.Entities/Stubs/Unity/Debug.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.entities/Unity.Entities/Types/TypeManager.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.entities/Unity.Scenes/AssetDependencyTracker.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.netcode/Runtime/ClientServerWorld/OverrideAutomaticNetcodeBootstrap.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.netcode/Runtime/Connection/NetworkStreamDriver.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
@@ -42,7 +44,8 @@
       <updated>1718882560351</updated>
       <workItem from="1718882604395" duration="1462000" />
       <workItem from="1718884437715" duration="4197000" />
-      <workItem from="1718889815613" duration="13520000" />
+      <workItem from="1718889815613" duration="16789000" />
+      <workItem from="1718958316528" duration="2349000" />
     </task>
     <servers />
   </component>
