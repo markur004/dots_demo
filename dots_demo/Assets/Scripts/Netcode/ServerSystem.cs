@@ -44,9 +44,11 @@ public partial class ServerSystem : SystemBase
             PrefabsData prefabManager = SystemAPI.GetSingleton<PrefabsData>();
             if (prefabManager.player != null)
             {
+                UnityEngine.Debug.Log("tworze gracza!!!!");
                 Entity player = commandBuffer.Instantiate(prefabManager.player);
                 commandBuffer.SetComponent(player, new LocalTransform()
                 {
+                   
                     Position = new float3(UnityEngine.Random.Range(-10f, 10f), 0, UnityEngine.Random.Range(-10f, 10f)),
                     Rotation = quaternion.identity,
                     Scale = 1f

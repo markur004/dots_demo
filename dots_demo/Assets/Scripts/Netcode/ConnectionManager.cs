@@ -29,10 +29,11 @@ public class ConnectionManager : MonoBehaviour
 
     private void Start()
     {
+        DontDestroyOnLoad(this.gameObject);
         port.text = "7979";
         addres.text = "127.0.0.1";
     }
-
+    
 
     public void OnButtonConnectClick()
     {
@@ -133,61 +134,43 @@ public class ConnectionManager : MonoBehaviour
         }
     
     }
-    //
-    // private void Start()
-    // {
-    //
-    // }
-    //
-    // public void Connect()
-    // {
-    //     foreach (var world in World.All)
-    //     {
-    //         if (world.Flags == WorldFlags.Game)
-    //         {
-    //             world.Dispose();
-    //             break;
-    //         }
-    //     }
-    //     if (_connecting)
-    //     {
-    //         return;
-    //     }
-    //
-    //     _connecting = true;
-    //     StartCoroutine(IntializeConnection());
-    // }
-    //
-    // private IEnumerator IntializeConnection()
-    // {
-    //     bool isServer = ClientServerBootstrap.RequestedPlayType == ClientServerBootstrap.PlayType.ClientAndServer ||
-    //                     ClientServerBootstrap.RequestedPlayType == ClientServerBootstrap.PlayType.Server;
-    //     bool isClient = ClientServerBootstrap.RequestedPlayType == ClientServerBootstrap.PlayType.ClientAndServer ||
-    //                     ClientServerBootstrap.RequestedPlayType == ClientServerBootstrap.PlayType.Client;
-    //     while ((isServer && !ClientServerBootstrap.HasServerWorld) || (isClient && !ClientServerBootstrap.HasClientWorlds))
-    //     {
-    //         yield return null;
-    //     }
-    //
-    //     if (isServer)
-    //     {
-    //         using var query =
-    //             ServerWorld.EntityManager.CreateEntityQuery(ComponentType.ReadWrite<NetworkStreamDriver>());
-    //         query.GetSingletonRW<NetworkStreamDriver>().ValueRW.Listen(NetworkEndpoint.Parse(_listenIP, _port));
-    //
-    //     }
-    //     
-    //     if (isClient)
-    //     {
-    //         using var query =
-    //             ClientWorld.EntityManager.CreateEntityQuery(ComponentType.ReadWrite<NetworkStreamDriver>());
-    //         query.GetSingletonRW<NetworkStreamDriver>().ValueRW.Connect(ClientWorld.EntityManager,NetworkEndpoint.Parse(_connectIP, _port));
-    //
-    //     }
-    //
-    //     _connecting = false;
-    // }
-    //
+
+    public void StartRelayHost(int port, string conIP)
+    {
+        Debug.Log("server" + port + " " + conIP);
+        DestoryLocalSimulationWorld();
+        SceneManager.LoadScene(1);
+        
+        var serverWorld = ClientServerBootstrap.CreateServerWorld("server");
+        ushort Port = (ushort )port;
+        // var serverEndpoint = NetworkEndpoint.AnyIpv4.WithPort(Port);
+        // {
+        //     using var query =
+        //         serverWorld.EntityManager.CreateEntityQuery(ComponentType.ReadWrite<NetworkStreamDriver>());
+        //     query.GetSingletonRW<NetworkStreamDriver>().ValueRW.Listen(serverEndpoint);
+        // }
+
+        var listenReq = ServerWorld.EntityManager.CreateEntity(typeof(NetworkStreamRequestListen));
+        ServerWorld.EntityManager.SetComponentData(listenReq,new NetworkStreamRequestListen {Endpoint = ClientServerBootstrap.DefaultListenAddress.WithPort(Port)});
+        StartRelayClient(port, conIP);
+    }
+
+    private void StartRelayClient(int port, string conIP)
+    {
+        Debug.Log("server" + port + " " + conIP);
+        DestoryLocalSimulationWorld();
+        SceneManager.LoadScene(1);
+        Debug.Log("client " + port + " " + conIP);
+        var clientWorld = ClientServerBootstrap.CreateClientWorld("client");
+        ushort  Port = (ushort )port;
+        var connectionEndpoint = NetworkEndpoint.Parse(conIP, Port);
+        {
+            using var query =
+                clientWorld.EntityManager.CreateEntityQuery(ComponentType.ReadWrite<NetworkStreamDriver>());
+            query.GetSingletonRW<NetworkStreamDriver>().ValueRW.Connect(clientWorld.EntityManager,connectionEndpoint);
+        }
+        World.DefaultGameObjectInjectionWorld = clientWorld;
+    }
 
 
 }
