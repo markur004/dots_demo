@@ -26,8 +26,11 @@ public class RelayManger : MonoBehaviour
         try
         {
            Allocation allocation = await RelayService.Instance.CreateAllocationAsync(3);
+           
            joincode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
-           _connectionManager.StartRelayHost(allocation.RelayServer.Port ,allocation.RelayServer.IpV4);
+           
+           _connectionManager.StartRelayHost(allocation , joincode);
+           
         }
         catch(RelayServiceException e)
         {

@@ -6,6 +6,7 @@ using Unity.Collections;
 using Unity.Entities;
 using Unity.NetCode;
 using Unity.Networking.Transport;
+using Unity.Services.Relay.Models;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem.HID;
@@ -21,6 +22,7 @@ public class ConnectionManager : MonoBehaviour
     [SerializeField] private TMP_Dropdown contype;
     [SerializeField] private TMP_InputField port;
     [SerializeField] private TMP_InputField addres;
+    
 
     private void Awake()
     {
@@ -135,42 +137,49 @@ public class ConnectionManager : MonoBehaviour
     
     }
 
-    public void StartRelayHost(int port, string conIP)
+    public void StartRelayHost(Allocation allocation , string joincode)
     {
-        Debug.Log("server" + port + " " + conIP);
+        DestoryLocalSimulationWorld();
+        SceneManager.LoadScene(1);
+
+
+        var serverWorld = ClientServerBootstrap.CreateServerWorld("server");
+        var clientWorld = ClientServerBootstrap.CreateClientWorld("client");
+
+
+
+        var endpoint = NetworkEndpoint.Parse(allocation.RelayServer.IpV4, (ushort)allocation.RelayServer.Port);
+        
+        var networkStreamEntity = serverWorld.EntityManager.CreateEntity(ComponentType.ReadWrite<NetworkStreamRequestListen>());
+        serverWorld.EntityManager.SetName(networkStreamEntity, "NetworkStreamRequestListen");
+        serverWorld.EntityManager.SetComponentData(networkStreamEntity, new NetworkStreamRequestListen { Endpoint = NetworkEndpoint.AnyIpv4 });
+        
+        networkStreamEntity = clientWorld.EntityManager.CreateEntity(ComponentType.ReadWrite<NetworkStreamRequestConnect>());
+      
+        
+        clientWorld.EntityManager.SetName(networkStreamEntity, "NetworkStreamRequestConnect");
+        clientWorld.EntityManager.SetComponentData(networkStreamEntity, new NetworkStreamRequestConnect { Endpoint = endpoint });
+    }
+//https://github.com/Unity-Technologies/EntityComponentSystemSamples/blob/master/NetcodeSamples/Assets/Samples/HelloNetcode/1_Basics/01b_RelaySupport/RelayServer.md
+    private void StartRelayClient(int port, string conIP)
+    {
         DestoryLocalSimulationWorld();
         SceneManager.LoadScene(1);
         
-        var serverWorld = ClientServerBootstrap.CreateServerWorld("server");
-        ushort Port = (ushort )port;
-        // var serverEndpoint = NetworkEndpoint.AnyIpv4.WithPort(Port);
-        // {
-        //     using var query =
-        //         serverWorld.EntityManager.CreateEntityQuery(ComponentType.ReadWrite<NetworkStreamDriver>());
-        //     query.GetSingletonRW<NetworkStreamDriver>().ValueRW.Listen(serverEndpoint);
-        // }
-
-        var listenReq = ServerWorld.EntityManager.CreateEntity(typeof(NetworkStreamRequestListen));
-        ServerWorld.EntityManager.SetComponentData(listenReq,new NetworkStreamRequestListen {Endpoint = ClientServerBootstrap.DefaultListenAddress.WithPort(Port)});
-        StartRelayClient(port, conIP);
-    }
-
-    private void StartRelayClient(int port, string conIP)
-    {
-        Debug.Log("server" + port + " " + conIP);
-        DestoryLocalSimulationWorld();
-        SceneManager.LoadScene(1);
         Debug.Log("client " + port + " " + conIP);
         var clientWorld = ClientServerBootstrap.CreateClientWorld("client");
         ushort  Port = (ushort )port;
-        var connectionEndpoint = NetworkEndpoint.Parse(conIP, Port);
+        var connectionEndpoint = NetworkEndpoint.Parse(conIP, Port, NetworkFamily.Ipv4);
         {
             using var query =
                 clientWorld.EntityManager.CreateEntityQuery(ComponentType.ReadWrite<NetworkStreamDriver>());
             query.GetSingletonRW<NetworkStreamDriver>().ValueRW.Connect(clientWorld.EntityManager,connectionEndpoint);
         }
+        
+        
         World.DefaultGameObjectInjectionWorld = clientWorld;
     }
+
 
 
 }
